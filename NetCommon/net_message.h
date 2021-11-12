@@ -48,6 +48,29 @@ namespace olc
 
 				// Recalculate the message size
 				msg.header.size = msg.size();
+
+				return msg;
+			}
+
+			template<typename DataType>
+			friend message<T>& operator >> (message<T>& msg, DataType& data)
+			{
+				// Check pushed data's type is copyable
+				static_assert(std::is_standard_layout<DaataType>::value, "Data is too complex to be parsed");
+
+				// Cache the location
+				size_t i = msg.body.size() - sizeof(DateType);
+
+				// Copy the data from vector into the user variable
+				std::memcpy(&data, msg.body.data() + i, sizeof(DataType));
+
+				// Shrink the vector to remove read bytes and reset end position
+				msg.body.resize(i);
+
+				// Recalculate the message size
+				msg.header.size() = msg.size();
+
+				return msg;
 			}
 		};
 	}
