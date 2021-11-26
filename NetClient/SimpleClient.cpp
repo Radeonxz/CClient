@@ -7,9 +7,21 @@ enum class CustomMsgTypes : uint32_t
 	MovePlayer
 };
 
+class CustomClient : public olc::net::client_interface<CustomMsgTypes>
+{
+	public:
+		bool FireBullet(float x, float y)
+		{
+			olc::net::message<CustomMsgTypes> msg;
+			msg.header.id = CustomMsgTypes::FireBullets;
+			msg << x << y;
+			Sennd(msg);
+		}
+};
+
 int main()
 {
-	olc::net::message<CustomMsgTypes> msg;
+	/*olc::net::message<CustomMsgTypes> msg;
 	msg.header.id = CustomMsgTypes::FireBullet;
 
 	int a = 1;
@@ -30,5 +42,10 @@ int main()
 
 	msg >> d >> c >> b >> a;
 
-	return 0;
+	return 0;*/
+
+	CustomClient c;
+	c.Connect("", 60000);
+	c.FireBullet(2.0f, 5.0f);
+	return 0
 }
