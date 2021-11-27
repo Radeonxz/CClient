@@ -13,22 +13,63 @@ namespace olc
 		class server_interface
 		{
 
+		public:
+			server_interface(unit16_t port)
+			{
+
+			}
+
+			virtual ~server_interface()
+			{
+
+			}
+
+			bool Start()
+			{
+
+			}
+
+			void Stop()
+			{
+
+			}
+
+			// async insctruct asio to wait for connection
+			void WaitForClientConnection()
+			{
+
+			}
+
+			// send a message to the client
+			void MessageClient(std::shared_ptr<connection<T>> client, const message<T>& msg)
+			{
+
+			}
+
+			// send a message to all clients
+			void MessageAllClients(const message<T>& msg, std::shared_ptr<connection<T>> pIgnoreClient = nullprt)
+			{
+
+			}
+
 		protected:
-			// thread safe queue for incoming message packets
-			tsqueue<owned_message<T>> m_qMessagesIn;
+			// called when a client connects
+			virtual bool OnClientConnect(std::shared_ptr<connection<T>> client)
+			{
+				return false;
+			}
 
-			// container of active validated connections
-			std::deque<std::shared_ptr<connection<T>>> m_deqConnections;
+			// called when a client disconnects
+			virtual void OnClientDisconnect(std::shared_ptr<connection<T>> client)
+			{
 
-			// order of declaration is important - it is also the order of initialisation
-			asio::io_context m_asioContext;
-			std::thread m_threadContext;
+			}
 
-			// these things need an asio context
-			asio::ip::tcp::acceptor m_asioAcceptor; // Handles new incoming connection attempts...
+			// called when receive a message
+			virtual void OnMessage(std::shared_ptr<connection<T>> client, message<T>& msg)
+			{
 
-			// clients will be identified in the "wider system" via an ID
-			uint32_t nIDCounter = 10000;
+			}
 		};
 	}
 }
